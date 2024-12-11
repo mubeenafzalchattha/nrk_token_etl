@@ -168,7 +168,7 @@ const AssetDepositApp: React.FC = () => {
       }
 
       // Optional: Send deposit details to backend
-      await axios.post('/api/deposits', {
+      await axios.post('http://localhost:4000/api/deposits', {
         walletAddress,
         asset: selectedAsset.symbol,
         amount: depositAmount,
@@ -176,7 +176,7 @@ const AssetDepositApp: React.FC = () => {
         email: email,
         phone: phone,
         source: source,
-        transactionHash: tx?.hash
+        transactionHash: tx?.hash ?? 'm'
       });
 
       // Update status and refresh balance
