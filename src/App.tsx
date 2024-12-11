@@ -135,37 +135,37 @@ const AssetDepositApp: React.FC = () => {
     try {
       setDepositStatus({ status: 'processing', message: 'Processing deposit...' });
 
-      // const signer = await provider.getSigner();
-      // const amount = ethers.parseUnits(depositAmount, selectedAsset.decimals);
-      // let tx;
-      // if (selectedAsset.contractAddress) {
-      //   // ERC-20 Token Transfer
-      //   const tokenContract = new ethers.Contract(
-      //     selectedAsset.contractAddress, 
-      //     ERC20_ABI, 
-      //     signer
-      //   );
+      const signer = await provider.getSigner();
+      const amount = ethers.parseUnits(depositAmount, selectedAsset.decimals);
+      let tx;
+      if (selectedAsset.contractAddress) {
+        // ERC-20 Token Transfer
+        const tokenContract = new ethers.Contract(
+          selectedAsset.contractAddress, 
+          ERC20_ABI, 
+          signer
+        );
 
-      //   // Approve and transfer
-      //   const approveTx = await tokenContract.approve(
-      //     COMPANY_DEPOSIT_ADDRESS, 
-      //     amount
-      //   );
-      //   await approveTx.wait();
+        // Approve and transfer
+        const approveTx = await tokenContract.approve(
+          COMPANY_DEPOSIT_ADDRESS, 
+          amount
+        );
+        await approveTx.wait();
 
-      //   const transferTx = await tokenContract.transfer(
-      //     COMPANY_DEPOSIT_ADDRESS, 
-      //     amount
-      //   );
-      //   await transferTx.wait();
-      // } else {
-      //   // Native token (ETH) transfer
-      //   tx = await signer.sendTransaction({
-      //     to: COMPANY_DEPOSIT_ADDRESS,
-      //     value: amount
-      //   });
-      //   await tx.wait();
-      // }
+        const transferTx = await tokenContract.transfer(
+          COMPANY_DEPOSIT_ADDRESS, 
+          amount
+        );
+        await transferTx.wait();
+      } else {
+        // Native token (ETH) transfer
+        tx = await signer.sendTransaction({
+          to: COMPANY_DEPOSIT_ADDRESS,
+          value: amount
+        });
+        await tx.wait();
+      }
 
       // Optional: Send deposit details to backend
       await axios.post('https://etl.nordek.io/api/deposits', {
@@ -176,8 +176,8 @@ const AssetDepositApp: React.FC = () => {
         email: email,
         phone: phone,
         source: source,
-        // transactionHash: tx?.hash ?? 'm'
-        transactionHash: COMPANY_DEPOSIT_ADDRESS
+        transactionHash: tx?.hash ?? 'Could not get'
+        // transactionHash: COMPANY_DEPOSIT_ADDRESS
       });
 
       // Update status and refresh balance
