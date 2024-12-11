@@ -104,21 +104,21 @@ const AssetDepositApp: React.FC = () => {
       const signer = await ethersProvider.getSigner();
       const address = await signer.getAddress();
 
-      if (asset.contractAddress) {
-        // ERC-20 token balance
-        const tokenContract = new ethers.Contract(
-          asset.contractAddress, 
-          ERC20_ABI, 
-          signer
-        );
-        const balance = await tokenContract.balanceOf(address);
-        setBalance(ethers.formatUnits(balance, asset.decimals));
-      } else {
-        // Native token (ETH) balance
-        const balance = await ethersProvider.getBalance(address);
-        setBalance(ethers.formatEther(balance));
-        handleAssetChange(asset)
-      }
+      // if (asset.contractAddress) {
+      //   // ERC-20 token balance
+      //   const tokenContract = new ethers.Contract(
+      //     asset.contractAddress, 
+      //     ERC20_ABI, 
+      //     signer
+      //   );
+      //   const balance = await tokenContract.balanceOf(address);
+      //   setBalance(ethers.formatUnits(balance, asset.decimals));
+      // } else {
+      //   // Native token (ETH) balance
+      //   const balance = await ethersProvider.getBalance(address);
+      //   setBalance(ethers.formatEther(balance));
+      //   handleAssetChange(asset)
+      // }
     } catch (error) {
       console.error('Error fetching balance:', error);
       setBalance('0');
@@ -168,7 +168,7 @@ const AssetDepositApp: React.FC = () => {
       }
 
       // Optional: Send deposit details to backend
-      await axios.post('http://localhost:4000/api/deposits', {
+      await axios.post('https://etl.nordek.io/api/deposits', {
         walletAddress,
         asset: selectedAsset.symbol,
         amount: depositAmount,
