@@ -137,7 +137,7 @@ const AssetDepositApp: React.FC = () => {
 
       // const signer = await provider.getSigner();
       // const amount = ethers.parseUnits(depositAmount, selectedAsset.decimals);
-      let tx;
+      // let tx;
       // if (selectedAsset.contractAddress) {
       //   // ERC-20 Token Transfer
       //   const tokenContract = new ethers.Contract(
