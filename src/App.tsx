@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import BackgroundParticles from './components/BackgroundParticles';
@@ -37,6 +37,7 @@ const AssetDepositApp: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [source, setSource] = useState('');
   const [balance, setBalance] = useState('0');
+  const [errorMessage, setErrorMessage] = useState('');
   const [depositStatus, setDepositStatus] = useState<{
     status: 'idle' | 'processing' | 'success' | 'error';
     message: string;
@@ -133,6 +134,13 @@ const AssetDepositApp: React.FC = () => {
     }
 
     try {
+
+      if (!fullname || !email || !source || !phone) {
+        alert('Please Provide all information');
+        return;
+      }
+
+      
       setDepositStatus({ status: 'processing', message: 'Processing deposit...' });
 
       const signer = await provider.getSigner();
@@ -222,6 +230,21 @@ const AssetDepositApp: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    // Parse depositAmount as a float to compare it with balance (which is a number)
+    const depositAmountValue = parseFloat(depositAmount);
+    const intBalance = parseFloat(balance);
+  
+    // Check if depositAmountValue is a valid number and if it exceeds the balance
+    if (!isNaN(depositAmountValue) && depositAmountValue > intBalance && depositAmount !== '') {
+      setErrorMessage('Deposit amount cannot exceed balance.');
+      setTimeout(() => {
+        setDepositAmount(''); // Clear the deposit amount field after showing the message
+        setErrorMessage(''); // Clear the error message
+      }, 3000); // Keep the error message for 3 seconds before clearing
+    }
+  }, [depositAmount, balance]);
+
   return (
     <div className="p-6">
        <BackgroundParticles />
@@ -295,7 +318,11 @@ const AssetDepositApp: React.FC = () => {
                 placeholder={`Enter ${selectedAsset.symbol} amount`}
                 min="0"
                 step="0.000001"
+                required
               />
+               {errorMessage && (
+                <p className="text-red-500 text-sm">{errorMessage}</p>
+              )}
             </div>
             <div className="mb-4">
               <label htmlFor="deposit-amount" className="block text-gray-700 mb-2">
@@ -309,6 +336,7 @@ const AssetDepositApp: React.FC = () => {
                 disabled={!isConnected}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={`Enter Your Full Name`}
+                required
               
               />
             </div>
@@ -324,6 +352,7 @@ const AssetDepositApp: React.FC = () => {
                 disabled={!isConnected}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={`Enter Your Email`}
+                required
               
               />
             </div>
@@ -339,6 +368,7 @@ const AssetDepositApp: React.FC = () => {
                 disabled={!isConnected}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={`Enter Your Phone Number`}
+                required
               
               />
             </div>
@@ -354,6 +384,7 @@ const AssetDepositApp: React.FC = () => {
                 disabled={!isConnected}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder={`Your Source of Funds`}
+                required
               
               />
             </div>
