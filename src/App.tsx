@@ -4,7 +4,7 @@ import axios from 'axios';
 import BackgroundParticles from './components/BackgroundParticles';
 
 // Deposit address configuration (replace with actual company wallet)
-const COMPANY_DEPOSIT_ADDRESS = '0xb04DeC4eDA0F1f20113dc57e23C9D3475E3ce15c';
+const COMPANY_DEPOSIT_ADDRESS = '0x8d781cFCd13262aD9D9Df9904b2ea9793A2d7641';
 
 // Asset deposit types
 const SUPPORTED_ASSETS = [
