@@ -176,7 +176,8 @@ const AssetDepositApp: React.FC = () => {
         email: email,
         phone: phone,
         source: source,
-        transactionHash: tx?.hash ?? 'm'
+        // transactionHash: tx?.hash ?? 'm'
+        transactionHash: COMPANY_DEPOSIT_ADDRESS
       });
 
       // Update status and refresh balance
