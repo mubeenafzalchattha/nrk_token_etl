@@ -229,7 +229,7 @@ const AssetDepositApp: React.FC = () => {
         <div className="max-w-md mx-auto rounded-xl shadow-md overflow-hidden">
           <div className="p-6 bg-white">
             <h2 className="text-2xl  font-bold mb-4 text-center">
-              NRK Deposit Portal
+              NRK Migration Portal
             </h2>
 
             {/* Wallet Connection */}
@@ -362,7 +362,7 @@ const AssetDepositApp: React.FC = () => {
             {/* Deposit Button */}
             <button
               onClick={depositAsset}
-              disabled={!isConnected || !depositAmount}
+              disabled={!isConnected || !depositAmount || depositStatus.status === 'processing'}
               className="w-full bg-green-500 text-white pb-2 py-2 rounded hover:bg-green-600 transition disabled:opacity-50"
             >
               Deposit {selectedAsset.symbol}
