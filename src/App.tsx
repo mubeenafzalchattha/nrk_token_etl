@@ -104,21 +104,21 @@ const AssetDepositApp: React.FC = () => {
       const signer = await ethersProvider.getSigner();
       const address = await signer.getAddress();
 
-      // if (asset.contractAddress) {
-      //   // ERC-20 token balance
-      //   const tokenContract = new ethers.Contract(
-      //     asset.contractAddress, 
-      //     ERC20_ABI, 
-      //     signer
-      //   );
-      //   const balance = await tokenContract.balanceOf(address);
-      //   setBalance(ethers.formatUnits(balance, asset.decimals));
-      // } else {
-      //   // Native token (ETH) balance
-      //   const balance = await ethersProvider.getBalance(address);
-      //   setBalance(ethers.formatEther(balance));
-      //   handleAssetChange(asset)
-      // }
+      if (asset.contractAddress) {
+        // ERC-20 token balance
+        const tokenContract = new ethers.Contract(
+          asset.contractAddress, 
+          ERC20_ABI, 
+          signer
+        );
+        const balance = await tokenContract.balanceOf(address);
+        setBalance(ethers.formatUnits(balance, asset.decimals));
+      } else {
+        // Native token (ETH) balance
+        const balance = await ethersProvider.getBalance(address);
+        setBalance(ethers.formatEther(balance));
+        handleAssetChange(asset)
+      }
     } catch (error) {
       console.error('Error fetching balance:', error);
       setBalance('0');
@@ -135,37 +135,37 @@ const AssetDepositApp: React.FC = () => {
     try {
       setDepositStatus({ status: 'processing', message: 'Processing deposit...' });
 
-      const signer = await provider.getSigner();
-      const amount = ethers.parseUnits(depositAmount, selectedAsset.decimals);
+      // const signer = await provider.getSigner();
+      // const amount = ethers.parseUnits(depositAmount, selectedAsset.decimals);
       let tx;
-      if (selectedAsset.contractAddress) {
-        // ERC-20 Token Transfer
-        const tokenContract = new ethers.Contract(
-          selectedAsset.contractAddress, 
-          ERC20_ABI, 
-          signer
-        );
+      // if (selectedAsset.contractAddress) {
+      //   // ERC-20 Token Transfer
+      //   const tokenContract = new ethers.Contract(
+      //     selectedAsset.contractAddress, 
+      //     ERC20_ABI, 
+      //     signer
+      //   );
 
-        // Approve and transfer
-        const approveTx = await tokenContract.approve(
-          COMPANY_DEPOSIT_ADDRESS, 
-          amount
-        );
-        await approveTx.wait();
+      //   // Approve and transfer
+      //   const approveTx = await tokenContract.approve(
+      //     COMPANY_DEPOSIT_ADDRESS, 
+      //     amount
+      //   );
+      //   await approveTx.wait();
 
-        const transferTx = await tokenContract.transfer(
-          COMPANY_DEPOSIT_ADDRESS, 
-          amount
-        );
-        await transferTx.wait();
-      } else {
-        // Native token (ETH) transfer
-        tx = await signer.sendTransaction({
-          to: COMPANY_DEPOSIT_ADDRESS,
-          value: amount
-        });
-        await tx.wait();
-      }
+      //   const transferTx = await tokenContract.transfer(
+      //     COMPANY_DEPOSIT_ADDRESS, 
+      //     amount
+      //   );
+      //   await transferTx.wait();
+      // } else {
+      //   // Native token (ETH) transfer
+      //   tx = await signer.sendTransaction({
+      //     to: COMPANY_DEPOSIT_ADDRESS,
+      //     value: amount
+      //   });
+      //   await tx.wait();
+      // }
 
       // Optional: Send deposit details to backend
       await axios.post('https://etl.nordek.io/api/deposits', {
