@@ -2,6 +2,7 @@ import React, { useState ,useEffect} from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import BackgroundParticles from './components/BackgroundParticles';
+import toast, { Toaster } from 'react-hot-toast';
 
 // Deposit address configuration (replace with actual company wallet)
 const COMPANY_DEPOSIT_ADDRESS = '0x8d781cFCd13262aD9D9Df9904b2ea9793A2d7641';
@@ -128,6 +129,7 @@ const AssetDepositApp: React.FC = () => {
 
   // Deposit assets
   const depositAsset = async () => {
+
     if (!provider || !isConnected) {
       alert('Please connect your wallet first');
       return;
@@ -136,7 +138,7 @@ const AssetDepositApp: React.FC = () => {
     try {
 
       if (!fullname || !email || !source || !phone) {
-        alert('Please Provide all information');
+        toast('Please provide all information');
         return;
       }
 
@@ -193,6 +195,8 @@ const AssetDepositApp: React.FC = () => {
         status: 'success', 
         message: `Successfully deposited ${depositAmount} ${selectedAsset.symbol}` 
       });
+      toast(`Thank you for depositing ${depositAmount} ${selectedAsset.symbol}`)
+      toast('Soon you will be able to claim these NRK in new blockchain')
       await fetchBalance(provider, selectedAsset);
       setDepositAmount('');
     } catch (error) {
@@ -247,6 +251,18 @@ const AssetDepositApp: React.FC = () => {
 
   return (
     <div className="p-6">
+    <Toaster
+    position="top-right"
+    reverseOrder={true}
+    toastOptions={{
+      className: '',
+      style: {
+        border: '1px solid #713200',
+        padding: '16px',
+        color: '#713200',
+      },
+    }}
+    />
        <BackgroundParticles />
        <div className=" z-10">
         <div className="max-w-md mx-auto rounded-xl shadow-md overflow-hidden">
